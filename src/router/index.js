@@ -9,14 +9,14 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/helloWorld',
       name: 'HelloWorld',
       component: HelloWorld
-    },{
+    }, {
       path: '/login',
       name: 'Login',
       component: Login
-    },{
+    }, {
       path: '/mainView',
       name: 'MainView',
       component: MainView
