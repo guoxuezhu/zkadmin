@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'login',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     login () {
-      this.$router.push({path: '/mainView'})
+      this.$router.push({path: '/helloWorld'})
     }
   }
 }
