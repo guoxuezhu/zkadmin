@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button @click="login" size="lg" variant="primary">登 录</b-button>
+    <b-button @click="login" size="lg" variant="primary">main</b-button>
     <b-button @click="getDevices" size="lg" variant="primary">getDevices</b-button>
     <b-button @click="addDevices" size="lg" variant="primary">addDevices</b-button>
   </div>
