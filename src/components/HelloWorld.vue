@@ -16,7 +16,7 @@
     <div class="titleheight"></div>
     <br/><br/><br/>
     <div style="width: 90%; margin:0 auto">
-      <el-button type="primary" class="btnright" @click="adddialogVisible = true">添加设备</el-button>
+      <el-button type="primary" class="btnright" @click="deviceAddbtn()">添加设备</el-button>
       <br/><br/>
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="title" label="设备名称" ></el-table-column>
@@ -32,8 +32,9 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="deviceEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="primary" @click="deviceEdit(scope.$index, scope.row)">修改</el-button>
             <el-button size="mini" type="danger" @click="deviceDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="success" @click="deviceinfo(scope.$index, scope.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -41,22 +42,22 @@
     <el-dialog title="添加设备信息" :visible.sync="adddialogVisible">
       <el-form :model="form">
         <el-form-item label="设备名称" :label-width="formLabelWidth">
-          <el-input v-model="form.devicename" autocomplete="off"></el-input>
+          <el-input v-model="form.devicename" autocomplete="off" placeholder="请输入设备名称"></el-input>
         </el-form-item>
         <el-form-item label="IP地址" :label-width="formLabelWidth">
-          <el-input v-model="form.ip" autocomplete="off"></el-input>
+          <el-input v-model="form.ip" autocomplete="off" placeholder="请输入设备IP地址"></el-input>
         </el-form-item>
         <el-form-item label="系统版本" :label-width="formLabelWidth">
-          <el-input v-model="form.deviceversion" autocomplete="off"></el-input>
+          <el-input v-model="form.deviceversion" autocomplete="off" placeholder="请输入系统版本"></el-input>
         </el-form-item>
         <el-form-item label="数据库版本" :label-width="formLabelWidth">
-          <el-input v-model="form.dataversion" autocomplete="off"></el-input>
+          <el-input v-model="form.dataversion" autocomplete="off" placeholder="请输入数据库版本"></el-input>
         </el-form-item>
         <el-form-item label="显示屏个数" :label-width="formLabelWidth">
-          <el-input v-model="form.videonum" autocomplete="off"></el-input>
+          <el-input v-model="form.videonum" autocomplete="off" type="number" min="0"  placeholder="请输入显示屏个数"></el-input>
         </el-form-item>
         <el-form-item label="远程控制" :label-width="formLabelWidth">
-          <el-select v-model="form.mqttstatus" placeholder="请选择是否远程控制">
+          <el-select v-model="form.mqttstatus" placeholder="请选择是否远程控制" style="width: 100%">
             <el-option label="启动" value="on"></el-option>
             <el-option label="禁止" value="off"></el-option>
           </el-select>
@@ -88,18 +89,53 @@ export default {
         ip: '',
         deviceversion: '',
         dataversion: '',
-        videonum: '',
+        videonum: '0',
         mqttstatus: 'off'
       },
       formLabelWidth: '120px'
     }
   },
   methods: {
+    deviceAddbtn () {
+      this.form.ip = '192.168.1.1'
+      this.form.devicename = ''
+      this.form.deviceversion = '1.0.1'
+      this.form.dataversion = '1'
+      this.form.videonum = '0'
+      this.form.mqttstatus = 'off'
+      this.adddialogVisible = true
+    },
+    deviceinfo (index, row) {
+      console.log('===deviceinfo===' + index + '=====' + JSON.stringify(row))
+      this.$router.push({path: '/mainView'})
+    },
     deviceEdit (index, row) {
       console.log('===deviceEdit===' + index + '=====' + JSON.stringify(row))
+      this.form.ip = row.ip
+      this.form.devicename = row.title
+      this.form.deviceversion = row.version
+      this.form.dataversion = row.data_version
+      this.form.videonum = row.video_num
+      this.form.mqttstatus = row.show
+      this.adddialogVisible = true
     },
     deviceDelete (index, row) {
       console.log('===deviceDelete===' + index + '=====' + JSON.stringify(row))
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     login () {
       this.$router.push({path: '/mainView'})
