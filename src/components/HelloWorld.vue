@@ -1,8 +1,68 @@
 <template>
   <div>
-    <b-button @click="login" size="lg" variant="primary">main</b-button>
-    <b-button @click="getDevices" size="lg" variant="primary">getDevices</b-button>
-    <b-button @click="addDevices" size="lg" variant="primary">addDevices</b-button>
+    <b-navbar toggleable="lg" type="dark" variant="success" class="titleAppbar titleheight">
+      <b-navbar-brand href="#">力弘智慧教育</b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown right>
+            <!-- Using 'button-content' slot -->
+            <template slot="button-content"><em>admin</em></template>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <div class="titleheight"></div>
+    <br/><br/><br/>
+    <div style="width: 90%; margin:0 auto">
+      <el-button type="primary" class="btnright" @click="adddialogVisible = true">添加设备</el-button>
+      <br/><br/>
+      <el-table :data="tableData" border style="width: 100%">
+        <el-table-column prop="title" label="设备名称" ></el-table-column>
+        <el-table-column prop="ip" label="IP地址"></el-table-column>
+        <el-table-column prop="version" label="系统版本" width="180"></el-table-column>
+        <el-table-column prop="data_version" label="数据库版本" width="180"></el-table-column>
+        <el-table-column prop="video_num" label="显示屏个数" width="180"></el-table-column>
+        <el-table-column prop="show" label="远程控制" width="180"></el-table-column>
+        <el-table-column fixed="right" label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="deviceEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="deviceDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog title="添加设备信息" :visible.sync="adddialogVisible">
+      <el-form :model="form">
+        <el-form-item label="设备名称" :label-width="formLabelWidth">
+          <el-input v-model="form.devicename" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="IP地址" :label-width="formLabelWidth">
+          <el-input v-model="form.ip" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="系统版本" :label-width="formLabelWidth">
+          <el-input v-model="form.deviceversion" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="数据库版本" :label-width="formLabelWidth">
+          <el-input v-model="form.dataversion" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="显示屏个数" :label-width="formLabelWidth">
+          <el-input v-model="form.videonum" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="远程控制" :label-width="formLabelWidth">
+          <el-select v-model="form.mqttstatus" placeholder="请选择是否远程控制">
+            <el-option label="启动" value="on"></el-option>
+            <el-option label="禁止" value="off"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="adddialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDeviceok()">确 定</el-button>
+      </div>
+    </el-dialog>
+    <br/><br/><br/>
   </div>
 </template>
 
@@ -11,16 +71,36 @@ import axios from 'axios'
 import Qs from 'qs'
 export default {
   name: 'HelloWorld',
+  created () {
+    this.getDevices()
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      tableData: [],
+      adddialogVisible: false,
+      form: {
+        devicename: '',
+        ip: '',
+        deviceversion: '',
+        dataversion: '',
+        videonum: '',
+        mqttstatus: 'off'
+      },
+      formLabelWidth: '120px'
     }
   },
   methods: {
+    deviceEdit (index, row) {
+      console.log('===deviceEdit===' + index + '=====' + JSON.stringify(row))
+    },
+    deviceDelete (index, row) {
+      console.log('===deviceDelete===' + index + '=====' + JSON.stringify(row))
+    },
     login () {
       this.$router.push({path: '/mainView'})
     },
     getDevices () {
+      var _this = this
       var param = {}
       axios({
         method: 'get',
@@ -28,20 +108,21 @@ export default {
         params: param
       }).then(function (response) {
         console.log('=======getDevices=============' + JSON.stringify(response.data))
+        _this.tableData = response.data.data.rows
       }).catch(function (error) {
         alert(error)
       })
     },
-    addDevices () {
-      // var _this = this
+    addDeviceok () {
+      var _this = this
       var param = {
-        cate_id: 10013,
-        ip: '192.168.11.55',
-        title: '中控1',
-        version: '1.0.1',
-        data_version: '1',
-        video_num: 6,
-        show: 'on'
+        cate_id: 10015,
+        ip: _this.form.ip,
+        title: _this.form.devicename,
+        version: _this.form.deviceversion,
+        data_version: _this.form.dataversion,
+        video_num: _this.form.videonum,
+        show: _this.form.mqttstatus
       }
       // var sign = apply.appSign(param) // 添加签名
       // param.sign = sign
@@ -55,6 +136,13 @@ export default {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function (response) {
         console.log('=======添加=============' + JSON.stringify(response.data))
+        if (response.data.msg === 'OK') {
+          _this.adddialogVisible = false
+          // alert('添加成功')
+          _this.getDevices()
+        } else {
+          alert('添加失败' + response.data.msg)
+        }
       }).catch(function (error) {
         alert(error)
       })
@@ -65,4 +153,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.titleAppbar {
+  width: 100%;
+  position: fixed;
+  z-index: 1024;
+}
+.titleheight {
+  height: 56px;
+}
+.btnright {
+  float: right;
+}
 </style>
