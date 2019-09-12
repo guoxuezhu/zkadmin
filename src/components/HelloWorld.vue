@@ -24,7 +24,12 @@
         <el-table-column prop="version" label="系统版本" width="180"></el-table-column>
         <el-table-column prop="data_version" label="数据库版本" width="180"></el-table-column>
         <el-table-column prop="video_num" label="显示屏个数" width="180"></el-table-column>
-        <el-table-column prop="show" label="远程控制" width="180"></el-table-column>
+        <el-table-column label="远程控制" width="180">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.show === 'on'" type="success">启动</el-tag>
+            <el-tag v-else type="danger">禁止</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="deviceEdit(scope.$index, scope.row)">编辑</el-button>
