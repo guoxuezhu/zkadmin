@@ -20,17 +20,17 @@
       <br/><br/>
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="title" label="设备名称" ></el-table-column>
-        <el-table-column prop="ip" label="IP地址"></el-table-column>
-        <el-table-column prop="version" label="系统版本" width="180"></el-table-column>
-        <el-table-column prop="data_version" label="数据库版本" width="180"></el-table-column>
-        <el-table-column prop="video_num" label="显示屏个数" width="180"></el-table-column>
-        <el-table-column label="远程控制" width="180">
+        <el-table-column prop="ip" label="IP地址" width="180"></el-table-column>
+        <el-table-column prop="version" label="系统版本"></el-table-column>
+        <el-table-column prop="data_version" label="数据库版本"></el-table-column>
+        <el-table-column prop="video_num" label="显示屏个数" ></el-table-column>
+        <el-table-column label="远程控制">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.show === 'on'" type="success">启动</el-tag>
             <el-tag v-else type="danger">禁止</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column fixed="right" label="操作" width="220">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="deviceEdit(scope.$index, scope.row)">修改</el-button>
             <el-button size="mini" type="danger" @click="deviceDelete(scope.$index, scope.row)">删除</el-button>
