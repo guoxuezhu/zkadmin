@@ -1,20 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="success" class="titleAppbar titleheight">
-      <b-navbar-brand href="#">力弘智慧教育</b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown right>
-            <!-- Using 'button-content' slot -->
-            <template slot="button-content"><em>admin</em></template>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <div class="titleheight"></div>
-    <br/>
+    <Navbar></Navbar>
     <div style="width: 90%; margin:0 auto">
       <!-- <el-button type="primary" class="btnright" @click="deviceAddbtn()">添加设备</el-button> -->
       <br/><br/>
@@ -73,10 +59,13 @@
 </template>
 
 <script>
+import Navbar from './Navbar.vue'
 import axios from 'axios'
 import Qs from 'qs'
 export default {
-  name: 'HelloWorld',
+  components: {
+    Navbar
+  },
   created () {
     this.getDevices()
   },
@@ -112,17 +101,22 @@ export default {
       this.$router.push({path: '/mainView'})
     },
     deviceEdit (index, row) {
-      console.log('===deviceEdit===' + index + '=====' + JSON.stringify(row))
-      // this.form.ip = row.ip
-      // this.form.devicename = row.title
-      // this.form.deviceversion = row.version
-      // this.form.dataversion = row.data_version
-      // this.form.videonum = row.video_num
-      // this.form.mqttstatus = row.show
-      // this.adddialogVisible = true
-      localStorage.setItem('isMyIPconnect', '1')
-      localStorage.setItem('zhongkongIP', row.ip)
-      this.$router.push({path: '/mainView'})
+      var _this = this
+      var param = {}
+      axios({
+        method: 'get',
+        url: 'http://' + row.ip + ':8099/api/ipconnect',
+        params: param
+      }).then(function (response) {
+        console.log('=======连接=============' + JSON.stringify(response.data))
+        if (response.data === 200) {
+          localStorage.setItem('isMyIPconnect', '1')
+          localStorage.setItem('zhongkongIP', row.ip)
+          _this.$router.push({path: '/mainView'})
+        }
+      }).catch(function (error) {
+        alert(error + '连接失败，请检查网络')
+      })
     },
     deviceDelete (index, row) {
       console.log('===deviceDelete===' + index + '=====' + JSON.stringify(row))

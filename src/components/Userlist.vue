@@ -1,12 +1,15 @@
 <template>
   <div>
-    用户
+    <Navbar></Navbar>
   </div>
 </template>
 
 <script>
+import Navbar from './Navbar.vue'
 export default {
-  name: 'user',
+  components: {
+    Navbar
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'

@@ -1,21 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="success" class="titleAppbar titleheight">
-      <b-navbar-brand href="#">力弘智慧教育</b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown right>
-            <!-- Using 'button-content' slot -->
-            <template slot="button-content"><em>{{zkip}}</em></template>
-            <b-dropdown-item @click="stopconnect">断开</b-dropdown-item>
-            <b-dropdown-item @click="loginout">退出</b-dropdown-item>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <div class="titleheight"></div>
+    <Navbar></Navbar>
     <b-tabs pills card vertical>
       <b-tab title="基本信息" active @click="tabBaseinfoSeting">
         <BaseInfo ref="childBaseinfoSeting"></BaseInfo>
@@ -66,8 +51,10 @@ import MqttSeting from './seting/MqttSeting.vue'
 import IOoutSeting from './seting/IOoutSeting.vue'
 import DangeroutSeting from './seting/DangeroutSeting.vue'
 import ZKban from './seting/ZKban.vue'
+import Navbar from './Navbar.vue'
 export default {
   components: {
+    Navbar,
     BaseInfo,
     DangerSeting,
     EventSeting,
@@ -85,24 +72,10 @@ export default {
   },
   data () {
     return {
-      zkip: localStorage.getItem('zhongkongIP'),
       msg: 'Welcome to Your Vue.js App'
     }
   },
   methods: {
-    stopconnect () {
-      // localStorage.setItem('isConnect', '0')
-      // localStorage.setItem('zhongkongIP', '')
-      // this.$router.push({path: '/connect'})
-    },
-    loginout () {
-      // localStorage.setItem('isConnect', '0')
-      // localStorage.setItem('zhongkongIP', '')
-      // localStorage.setItem('isLogin', '0')
-      // localStorage.setItem('passWord', '')
-      // localStorage.setItem('mimastatus', '')
-      // this.$router.push({path: '/login'})
-    },
     tabBaseinfoSeting () {
       this.$refs.childBaseinfoSeting.getBaseInfo()
     },

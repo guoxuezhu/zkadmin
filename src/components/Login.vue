@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import Qs from 'qs'
 export default {
   name: 'Login',
   created () {
@@ -55,26 +57,42 @@ export default {
   },
   methods: {
     login () {
-      // if (this.userName === '' || this.passWord === '') {
-      //   alert('请输入用户名、密码')
-      //   return
-      // }
-      // if (this.userName !== 'admin' || this.passWord !== 'admin') {
-      //   alert('用户名或密码错误')
-      //   return
-      // }
-      // console.log('=======登录=============')
-      // if (this.status === '1') {
-      //   localStorage.setItem('userName', this.userName)
-      //   localStorage.setItem('passWord', this.passWord)
-      //   localStorage.setItem('mimastatus', this.status)
-      // } else {
-      //   localStorage.setItem('userName', '')
-      //   localStorage.setItem('passWord', '')
-      //   localStorage.setItem('mimastatus', '')
-      // }
+      var _this = this
+      if (this.userName === '' || this.passWord === '') {
+        alert('请输入用户名、密码')
+        return
+      }
+      if (this.userName !== 'admin' || this.passWord !== 'admin') {
+        alert('用户名或密码错误')
+        return
+      }
+      var param = {
+        user_name: this.userName,
+        user_pass: this.passWord
+      }
+      axios({
+        method: 'post',
+        url: 'api/user_login',
+        data: param,
+        transformRequest: [function (data, headers) {
+          return Qs.stringify(data)
+        }]
+      }).then(function (response) {
+        console.log('=======登录==user_login=======' + JSON.stringify(response.data))
+        if (response.data.flag === 1) {
+          localStorage.setItem('userName', _this.userName)
+          localStorage.setItem('passWord', _this.passWord)
+          localStorage.setItem('mimastatus', _this.status)
+          _this.$router.push({path: '/helloWorld'})
+        } else {
+          localStorage.setItem('userName', '')
+          localStorage.setItem('passWord', '')
+          localStorage.setItem('mimastatus', '')
+        }
+      }).catch(function (error) {
+        alert(error)
+      })
       // localStorage.setItem('isLogin', '1')
-      this.$router.push({path: '/helloWorld'})
     }
   }
 }

@@ -4,6 +4,9 @@ import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
 import MainView from '@/components/MainView'
 import Classdata from '@/components/Classdata'
+import Userlist from '@/components/Userlist'
+import ICdata from '@/components/ICdata'
+import ApkUpdata from '@/components/ApkUpdata'
 
 Vue.use(Router)
 
@@ -17,6 +20,18 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    }, {
+      path: '/apkUpdata',
+      name: 'ApkUpdata',
+      component: ApkUpdata
+    }, {
+      path: '/userlist',
+      name: 'Userlist',
+      component: Userlist
+    }, {
+      path: '/icdata',
+      name: 'ICdata',
+      component: ICdata
     }, {
       path: '/classdata',
       name: 'Classdata',

@@ -13,17 +13,17 @@
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">IP 地址</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="baseinfoList.ip" placeholder="请输入IP地址"></b-form-input>
+          <b-form-input disabled type="text" v-model.trim="baseinfoList.ip" placeholder="请输入IP地址"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">系统版本</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="baseinfoList.version" placeholder="请输入系统版本"></b-form-input>
+          <b-form-input disabled type="text" v-model.trim="baseinfoList.version" placeholder="请输入系统版本"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">数据库版本</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="baseinfoList.data_version" placeholder="请输入数据库版本"></b-form-input>
+          <b-form-input disabled type="text" v-model.trim="baseinfoList.data_version" placeholder="请输入数据库版本"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
