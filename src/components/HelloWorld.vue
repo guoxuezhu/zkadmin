@@ -30,9 +30,9 @@
             <el-tag v-else type="danger">禁止</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="220">
+        <el-table-column fixed="right" label="操作" width="250">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="deviceEdit(scope.$index, scope.row)">修改</el-button>
+            <el-button size="mini" type="primary" @click="deviceEdit(scope.$index, scope.row)">连接修改</el-button>
             <el-button size="mini" type="danger" @click="deviceDelete(scope.$index, scope.row)">删除</el-button>
             <el-button size="mini" type="success" @click="deviceinfo(scope.$index, scope.row)">详情</el-button>
           </template>
@@ -107,17 +107,22 @@ export default {
     },
     deviceinfo (index, row) {
       console.log('===deviceinfo===' + index + '=====' + JSON.stringify(row))
+      localStorage.setItem('zhongkongIP', row.ip)
+      localStorage.setItem('isMyIPconnect', '0')
       this.$router.push({path: '/mainView'})
     },
     deviceEdit (index, row) {
       console.log('===deviceEdit===' + index + '=====' + JSON.stringify(row))
-      this.form.ip = row.ip
-      this.form.devicename = row.title
-      this.form.deviceversion = row.version
-      this.form.dataversion = row.data_version
-      this.form.videonum = row.video_num
-      this.form.mqttstatus = row.show
-      this.adddialogVisible = true
+      // this.form.ip = row.ip
+      // this.form.devicename = row.title
+      // this.form.deviceversion = row.version
+      // this.form.dataversion = row.data_version
+      // this.form.videonum = row.video_num
+      // this.form.mqttstatus = row.show
+      // this.adddialogVisible = true
+      localStorage.setItem('isMyIPconnect', '1')
+      localStorage.setItem('zhongkongIP', row.ip)
+      this.$router.push({path: '/mainView'})
     },
     deviceDelete (index, row) {
       console.log('===deviceDelete===' + index + '=====' + JSON.stringify(row))

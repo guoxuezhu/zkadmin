@@ -17,7 +17,10 @@
     </b-navbar>
     <div class="titleheight"></div>
     <b-tabs pills card vertical>
-      <b-tab title="录播设置" active @click="tabLuboSeting">
+      <b-tab title="基本信息" active @click="tabBaseinfoSeting">
+        <BaseInfo ref="childBaseinfoSeting"></BaseInfo>
+      </b-tab>
+      <b-tab title="录播设置" @click="tabLuboSeting">
         <LuboSeting ref="childLuboSeting"></LuboSeting>
       </b-tab>
       <b-tab title="串口设置" @click="tabSportSeting">
@@ -52,6 +55,7 @@
 </template>
 
 <script>
+import BaseInfo from './seting/BaseInfo.vue'
 import DangerSeting from './seting/DangerSeting.vue'
 import EventSeting from './seting/EventSeting.vue'
 import JdqSeting from './seting/JdqSeting.vue'
@@ -64,6 +68,7 @@ import DangeroutSeting from './seting/DangeroutSeting.vue'
 import ZKban from './seting/ZKban.vue'
 export default {
   components: {
+    BaseInfo,
     DangerSeting,
     EventSeting,
     JdqSeting,
@@ -97,6 +102,9 @@ export default {
       // localStorage.setItem('passWord', '')
       // localStorage.setItem('mimastatus', '')
       // this.$router.push({path: '/login'})
+    },
+    tabBaseinfoSeting () {
+      this.$refs.childBaseinfoSeting.getBaseInfo()
     },
     tabSportSeting () {
       this.$refs.childSportSeting.sportInfo()

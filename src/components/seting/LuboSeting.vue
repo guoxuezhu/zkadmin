@@ -1,32 +1,30 @@
 <template>
   <div>
     <br><br>
-    <div v-for="lubo in luboList" :key="lubo.id">
-      <b-row>
-        <b-col lg="3">
-        </b-col>
-        <b-col lg="6" class="btn_lubo_tijiao">
-          <b-input-group>
-            <b-input-group-prepend is-text><b style="width: 118px;">录播IP地址</b></b-input-group-prepend>
-            <b-form-input type="text" v-model.trim="lubo.record_ip" placeholder="请输入工作时长"></b-form-input>
-          </b-input-group>
-          <br>
-          <b-input-group>
-            <b-input-group-prepend is-text><b style="width: 118px;">录播用户名称</b></b-input-group-prepend>
-            <b-form-input type="text" v-model.trim="lubo.record_user" placeholder="请输入工作时长"></b-form-input>
-          </b-input-group>
-          <br>
-          <b-input-group>
-            <b-input-group-prepend is-text><b style="width: 118px;">录播用户密码</b></b-input-group-prepend>
-            <b-form-input type="text" v-model.trim="lubo.record_pass" placeholder="请输入工作时长"></b-form-input>
-          </b-input-group>
-          <br>
-          <b-button variant="outline-success" @click="luboInfoCommit()">提 交</b-button>
-        </b-col>
-        <b-col lg="3">
-        </b-col>
-      </b-row>
-    </div>
+    <b-row>
+      <b-col lg="3">
+      </b-col>
+      <b-col lg="6" class="btn_lubo_tijiao">
+        <b-input-group>
+          <b-input-group-prepend is-text><b style="width: 118px;">录播IP地址</b></b-input-group-prepend>
+          <b-form-input type="text" v-model.trim="luboList.record_ip" placeholder="请输入工作时长"></b-form-input>
+        </b-input-group>
+        <br>
+        <b-input-group>
+          <b-input-group-prepend is-text><b style="width: 118px;">录播用户名称</b></b-input-group-prepend>
+          <b-form-input type="text" v-model.trim="luboList.record_user" placeholder="请输入工作时长"></b-form-input>
+        </b-input-group>
+        <br>
+        <b-input-group>
+          <b-input-group-prepend is-text><b style="width: 118px;">录播用户密码</b></b-input-group-prepend>
+          <b-form-input type="text" v-model.trim="luboList.record_pass" placeholder="请输入工作时长"></b-form-input>
+        </b-input-group>
+        <br>
+        <b-button variant="outline-success" @click="luboInfoCommit()">提 交</b-button>
+      </b-col>
+      <b-col lg="3">
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -35,18 +33,23 @@ import axios from 'axios'
 // import apply from '../../api/apply.js'
 export default {
   created () {
-    this.luboInfo()
   },
   data () {
     return {
-      luboList: [],
+      luboList: {
+        record_ip: '',
+        record_user: '',
+        record_pass: ''
+      },
       msg: 'Welcome to Your Vue.js App'
     }
   },
   methods: {
     luboInfo () {
       var _this = this
-      var param = {}
+      var param = {
+        ip: localStorage.getItem('zhongkongIP')
+      }
       // var sign = apply.appSign(param) // 添加签名
       // param.sign = sign
       axios({
@@ -54,8 +57,22 @@ export default {
         url: 'api/get_record_list',
         params: param
       }).then(function (response) {
-        console.log('=======录播 =============' + JSON.stringify(response.data))
-        _this.luboList = response.data.data.rows
+        console.log('=======录播=====get_record_list========' + JSON.stringify(response.data))
+        _this.luboList = response.data.data
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    myluboInfo () {
+      var _this = this
+      var param = {}
+      axios({
+        method: 'get',
+        url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/luboInfo',
+        params: param
+      }).then(function (response) {
+        console.log('=======录播=======zhongkongIP======' + JSON.stringify(response.data))
+        _this.luboList = response.data.data[0]
       }).catch(function (error) {
         alert(error)
       })

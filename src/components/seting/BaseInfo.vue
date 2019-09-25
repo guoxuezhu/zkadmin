@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div>
     <br><br>
     <h6 class="btn_lubo_tijiao h_color">设备名称 设置必须保证与别的学校不同，并且容易记住，作为远程控制连接</h6>
@@ -8,32 +8,32 @@
       <b-col lg="6" class="btn_lubo_tijiao">
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">设备名称</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="baseinfoList.zkname" placeholder="请输入设备名称"></b-form-input>
+          <b-form-input type="text" v-model.trim="baseinfoList.title" placeholder="请输入设备名称"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">IP 地址</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="baseinfoList.zkip" placeholder="请输入IP地址"></b-form-input>
+          <b-form-input type="text" v-model.trim="baseinfoList.ip" placeholder="请输入IP地址"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">系统版本</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="baseinfoList.zkVersion" placeholder="请输入系统版本"></b-form-input>
+          <b-form-input type="text" v-model.trim="baseinfoList.version" placeholder="请输入系统版本"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">数据库版本</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="baseinfoList.geendaoVersion" placeholder="请输入数据库版本"></b-form-input>
+          <b-form-input type="text" v-model.trim="baseinfoList.data_version" placeholder="请输入数据库版本"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">显示屏个数</b></b-input-group-prepend>
-          <b-form-input type="number" min="0" v-model.trim="baseinfoList.hudongVIDnum" placeholder="请输入显示屏个数"></b-form-input>
+          <b-form-input type="number" min="0" v-model.trim="baseinfoList.video_num" placeholder="请输入显示屏个数"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">远程控制</b></b-input-group-prepend>
-          <b-form-select v-model="baseinfoList.ismqttStart" :options="mqttStatusOptions"></b-form-select>
+          <b-form-select v-model="baseinfoList.show" :options="mqttStatusOptions"></b-form-select>
         </b-input-group>
         <br>
         <b-button variant="outline-success" @click="baseInfoCommit()">提 交</b-button>
@@ -57,6 +57,7 @@ export default {
     // } else {
     //   this.getBaseInfo()
     // }
+    this.getBaseInfo()
   },
   data () {
     return {
@@ -65,13 +66,13 @@ export default {
         { value: 0, text: '禁止' }
       ],
       baseinfoList: {
-        zkname: '',
-        zkip: '',
-        zkVersion: '',
-        geendaoVersion: '',
-        hudongVIDnum: 0,
+        title: '',
+        ip: '',
+        version: '',
+        data_version: '',
+        video_num: 0,
         uuid: '',
-        ismqttStart: 0
+        show: 0
       },
       zkIP: localStorage.getItem('zhongkongIP'),
       zkversion: ''
@@ -79,17 +80,38 @@ export default {
   },
   methods: {
     getBaseInfo () {
+      if (localStorage.getItem('isMyIPconnect') === '1') {
+        this.ipconnectBaseInfo()
+      } else {
+        this.mygetBaseInfo()
+      }
+    },
+    ipconnectBaseInfo () {
       var _this = this
       var param = {}
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/zkBaseInfo',
         params: param
       }).then(function (response) {
-        console.log('=======getBaseInfo=============' + JSON.stringify(response.data))
+        console.log('=======getBaseInfo======zhongkongIP=======' + JSON.stringify(response.data))
         _this.baseinfoList = response.data.data
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    mygetBaseInfo () {
+      var _this = this
+      var param = {
+        ip: localStorage.getItem('zhongkongIP')
+      }
+      axios({
+        method: 'get',
+        url: 'api/get_center_list',
+        params: param
+      }).then(function (response) {
+        console.log('=======getBaseInfo======get_center_list=======' + JSON.stringify(response.data))
+        _this.baseinfoList = response.data.data.rows[0]
       }).catch(function (error) {
         alert(error)
       })
@@ -124,7 +146,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .btn_lubo_tijiao {
   text-align: center;
@@ -133,4 +154,3 @@ export default {
   color: red;
 }
 </style>
- -->
