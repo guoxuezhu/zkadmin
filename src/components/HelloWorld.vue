@@ -14,9 +14,9 @@
       </b-collapse>
     </b-navbar>
     <div class="titleheight"></div>
-    <br/><br/><br/>
+    <br/>
     <div style="width: 90%; margin:0 auto">
-      <el-button type="primary" class="btnright" @click="deviceAddbtn()">添加设备</el-button>
+      <!-- <el-button type="primary" class="btnright" @click="deviceAddbtn()">添加设备</el-button> -->
       <br/><br/>
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="title" label="设备名称" ></el-table-column>
@@ -26,7 +26,7 @@
         <el-table-column prop="video_num" label="显示屏个数" ></el-table-column>
         <el-table-column label="远程控制">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.show === 'on'" type="success">启动</el-tag>
+            <el-tag v-if="scope.row.show === 1" type="success">启动</el-tag>
             <el-tag v-else type="danger">禁止</el-tag>
           </template>
         </el-table-column>

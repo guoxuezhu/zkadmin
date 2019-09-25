@@ -36,7 +36,7 @@
           <b-form-select v-model="baseinfoList.show" :options="mqttStatusOptions"></b-form-select>
         </b-input-group>
         <br>
-        <b-button variant="outline-success" @click="baseInfoCommit()">提 交</b-button>
+        <b-button v-if="isMyIPconnect" variant="outline-success" @click="baseInfoCommit()">提 交</b-button>
       </b-col>
       <b-col lg="3">
       </b-col>
@@ -57,10 +57,16 @@ export default {
     // } else {
     //   this.getBaseInfo()
     // }
+    if (localStorage.getItem('isMyIPconnect') === '1') {
+      this.isMyIPconnect = true
+    } else {
+      this.isMyIPconnect = false
+    }
     this.getBaseInfo()
   },
   data () {
     return {
+      isMyIPconnect: false,
       mqttStatusOptions: [
         { value: 1, text: '启动' },
         { value: 0, text: '禁止' }

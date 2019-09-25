@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button class="btn_tijiao" variant="outline-success" @click="DangerInfoCommit()">提 交</b-button>
+    <b-button v-if="isMyIPconnect" class="btn_tijiao" variant="outline-success" @click="DangerInfoCommit()">提 交</b-button>
     <br><br>
     <div v-for="danger in dangerList" :key="danger.id">
       <div class="danger_bg">
@@ -40,8 +40,16 @@
 import axios from 'axios'
 // import apply from '../../api/apply.js'
 export default {
+  created () {
+    if (localStorage.getItem('isMyIPconnect') === '1') {
+      this.isMyIPconnect = true
+    } else {
+      this.isMyIPconnect = false
+    }
+  },
   data () {
     return {
+      isMyIPconnect: false,
       dangerStatusOptions: [
         { value: 1, text: '高电平' },
         { value: 0, text: '低电平' }
@@ -69,7 +77,14 @@ export default {
         params: param
       }).then(function (response) {
         console.log('=======报警======get_alarm_list=======' + JSON.stringify(response.data))
-        _this.dangerList = response.data.data.rows
+        if (response.data.flag === 1) {
+          _this.dangerList = response.data.data.rows
+        } else {
+          _this.dangerList = []
+          for (var i = 1; i < 5; i++) {
+            _this.dangerList.push({dangerIoStatus: 0, dangerMl: '', deviceName: '', id: i, name: '报警' + i, noDangerMl: ''})
+          }
+        }
       }).catch(function (error) {
         alert(error)
       })

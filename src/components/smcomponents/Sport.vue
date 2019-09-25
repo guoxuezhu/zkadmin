@@ -39,7 +39,7 @@
           </b-form-group>
         </b-col>
         <b-col lg="4">
-          <b-button class="btn_tijiao" variant="outline-success" @click="commitbtn()">提 交</b-button>
+          <b-button v-if="isMyIPconnect" class="btn_tijiao" variant="outline-success" @click="commitbtn()">提 交</b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -60,8 +60,16 @@
 import axios from 'axios'
 import Qs from 'qs'
 export default {
+  created () {
+    if (localStorage.getItem('isMyIPconnect') === '1') {
+      this.isMyIPconnect = true
+    } else {
+      this.isMyIPconnect = false
+    }
+  },
   data () {
     return {
+      isMyIPconnect: false,
       jinzhiSelected: 16,
       jinzhiOptions: [
         { value: 16, text: '十六进制' },
@@ -170,16 +178,36 @@ export default {
         params: param
       }).then(function (response) {
         console.log('=======串口======get_serial_list=======' + JSON.stringify(response.data.data))
-        _this.baudrateSelected = response.data.data.rows[0].baudRateId
-        _this.checkoutBitSelected = response.data.data.rows[0].checkoutBitId
-        _this.dataBitSelected = response.data.data.rows[0].dataBitId
-        _this.stopBitSelected = response.data.data.rows[0].stopBitId
-        _this.bindName = response.data.data.rows[0].deviceName
-        _this.jinzhiSelected = response.data.data.rows[0].jinZhi
-        _this.commandList = response.data.data.rows[0].command
-        _this.count = _this.commandList.length
-        _this.commands = _this.commandList.slice(0, 10)
-        _this.currentPage = 1
+        if (response.data.flag === 1) {
+          _this.baudrateSelected = response.data.data.rows[0].baudRateId
+          _this.checkoutBitSelected = response.data.data.rows[0].checkoutBitId
+          _this.dataBitSelected = response.data.data.rows[0].dataBitId
+          _this.stopBitSelected = response.data.data.rows[0].stopBitId
+          _this.bindName = response.data.data.rows[0].deviceName
+          _this.jinzhiSelected = response.data.data.rows[0].jinZhi
+          _this.commandList = response.data.data.rows[0].command
+          _this.count = _this.commandList.length
+          _this.commands = _this.commandList.slice(0, 10)
+          _this.currentPage = 1
+        } else {
+          _this.baudrateSelected = 3
+          _this.checkoutBitSelected = 0
+          _this.dataBitSelected = 0
+          _this.stopBitSelected = 0
+          _this.bindName = ''
+          _this.jinzhiSelected = 16
+          _this.commandList = []
+          for (var i = 1; i < 31; i++) {
+            if (i < 10) {
+              _this.commandList.push({commandId: '1-' + _this.ckNum + '0' + i, commandName: '', commandStr: '', jinZhi: 16, mlId: i, sId: _this.ckNum, sKey: _this.ckNum + '0' + i})
+            } else {
+              _this.commandList.push({commandId: '1-' + _this.ckNum + i, commandName: '', commandStr: '', jinZhi: 16, mlId: i, sId: _this.ckNum, sKey: _this.ckNum + i})
+            }
+          }
+          _this.count = _this.commandList.length
+          _this.commands = _this.commandList.slice(0, 10)
+          _this.currentPage = 1
+        }
       }).catch(function (error) {
         alert(error)
       })

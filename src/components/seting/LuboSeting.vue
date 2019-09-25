@@ -7,20 +7,20 @@
       <b-col lg="6" class="btn_lubo_tijiao">
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">录播IP地址</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="luboList.record_ip" placeholder="请输入工作时长"></b-form-input>
+          <b-form-input type="text" v-model.trim="luboList.record_ip" placeholder="请输入录播IP地址"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">录播用户名称</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="luboList.record_user" placeholder="请输入工作时长"></b-form-input>
+          <b-form-input type="text" v-model.trim="luboList.record_user" placeholder="请输入录播用户名称"></b-form-input>
         </b-input-group>
         <br>
         <b-input-group>
           <b-input-group-prepend is-text><b style="width: 118px;">录播用户密码</b></b-input-group-prepend>
-          <b-form-input type="text" v-model.trim="luboList.record_pass" placeholder="请输入工作时长"></b-form-input>
+          <b-form-input type="text" v-model.trim="luboList.record_pass" placeholder="请输入录播用户密码"></b-form-input>
         </b-input-group>
         <br>
-        <b-button variant="outline-success" @click="luboInfoCommit()">提 交</b-button>
+        <b-button v-if="isMyIPconnect" variant="outline-success" @click="luboInfoCommit()">提 交</b-button>
       </b-col>
       <b-col lg="3">
       </b-col>
@@ -30,12 +30,17 @@
 
 <script>
 import axios from 'axios'
-// import apply from '../../api/apply.js'
 export default {
   created () {
+    if (localStorage.getItem('isMyIPconnect') === '1') {
+      this.isMyIPconnect = true
+    } else {
+      this.isMyIPconnect = false
+    }
   },
   data () {
     return {
+      isMyIPconnect: false,
       luboList: {
         record_ip: '',
         record_user: '',

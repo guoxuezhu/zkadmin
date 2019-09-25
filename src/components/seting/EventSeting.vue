@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button class="btn_tijiao" variant="outline-success" @click="EventInfoCommit()">提 交</b-button>
+    <b-button v-if="isMyIPconnect" class="btn_tijiao" variant="outline-success" @click="EventInfoCommit()">提 交</b-button>
     <br><br>
     <div v-for="event in events" :key="event.id">
       <b-input-group >
@@ -18,8 +18,16 @@
 import axios from 'axios'
 // import apply from '../../api/apply.js'
 export default {
+  created () {
+    if (localStorage.getItem('isMyIPconnect') === '1') {
+      this.isMyIPconnect = true
+    } else {
+      this.isMyIPconnect = false
+    }
+  },
   data () {
     return {
+      isMyIPconnect: false,
       eventList: [],
       events: [],
       perPage: 10,
@@ -67,10 +75,14 @@ export default {
         params: param
       }).then(function (response) {
         console.log('=======事件=====get_event_list========' + JSON.stringify(response.data))
-        _this.eventList = response.data.data.rows
-        _this.count = _this.eventList.length
-        _this.events = _this.eventList.slice(0, 10)
-        _this.currentPage = 1
+        if (response.data.flag === 1) {
+          _this.eventList = response.data.data.rows
+          _this.count = _this.eventList.length
+          _this.events = _this.eventList.slice(0, 10)
+          _this.currentPage = 1
+        } else {
+          alert('无数据')
+        }
       }).catch(function (error) {
         alert(error)
       })
@@ -97,8 +109,6 @@ export default {
       var param = {
         eventDatas: _this.eventList
       }
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'post',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/updataEventInfo',

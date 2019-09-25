@@ -1,12 +1,12 @@
 <template>
   <div>
-    <b-button class="btn_tijiao" variant="outline-success" @click="jdqInfoCommit()">提 交</b-button>
+    <b-button v-if="isMyIPconnect" class="btn_tijiao" variant="outline-success" @click="jdqInfoCommit()">提 交</b-button>
     <br><br>
     <div v-for="jdq in jdqList" :key="jdq.id">
       <div class="danger_bg">
         <b-row>
           <b-col lg="2">
-            <b>{{jdq.name}}</b>
+            <b>{{jdq.name}}口</b>
           </b-col>
           <b-col lg="4">
             <b-input-group prepend="绑定的设备">
@@ -32,8 +32,16 @@
 import axios from 'axios'
 // import apply from '../../api/apply.js'
 export default {
+  created () {
+    if (localStorage.getItem('isMyIPconnect') === '1') {
+      this.isMyIPconnect = true
+    } else {
+      this.isMyIPconnect = false
+    }
+  },
   data () {
     return {
+      isMyIPconnect: false,
       jdqStatusOptions: [
         { value: 1, text: '开' },
         { value: 0, text: '关' }
@@ -61,7 +69,14 @@ export default {
         params: param
       }).then(function (response) {
         console.log('=======继电器======get_relay_list=======' + JSON.stringify(response.data))
-        _this.jdqList = response.data.data.rows
+        if (response.data.flag === 1) {
+          _this.jdqList = response.data.data.rows
+        } else {
+          _this.jdqList = []
+          for (var i = 1; i < 9; i++) {
+            _this.jdqList.push({jdqStatus: 0, deviceName: '', id: i, name: '继电器' + i, time: 1})
+          }
+        }
       }).catch(function (error) {
         alert(error)
       })
