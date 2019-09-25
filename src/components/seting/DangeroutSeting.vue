@@ -48,16 +48,37 @@ export default {
   },
   methods: {
     dangeroutInfo () {
+      if (localStorage.getItem('isMyIPconnect') === '1') {
+        this.ipconnectdangeroutInfo()
+      } else {
+        this.mydangeroutInfo()
+      }
+    },
+    mydangeroutInfo () {
+      var _this = this
+      var param = {
+        ip: localStorage.getItem('zhongkongIP')
+      }
+      axios({
+        method: 'get',
+        url: 'api/get_alarm_out_list',
+        params: param
+      }).then(function (response) {
+        console.log('=======mqtt======get_alarm_out_list=======' + JSON.stringify(response.data))
+        _this.dangerOutList = response.data.data.rows
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    ipconnectdangeroutInfo () {
       var _this = this
       var param = {}
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/dangerOutInfo',
         params: param
       }).then(function (response) {
-        console.log('=======mqtt=============' + JSON.stringify(response.data))
+        console.log('=======mqtt======zhongkongIP=======' + JSON.stringify(response.data))
         _this.dangerOutList = response.data.data
       }).catch(function (error) {
         alert(error)

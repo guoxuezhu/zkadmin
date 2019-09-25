@@ -48,16 +48,37 @@ export default {
   },
   methods: {
     iooutInfo () {
+      if (localStorage.getItem('isMyIPconnect') === '1') {
+        this.ipconnectiooutInfo()
+      } else {
+        this.myiooutInfo()
+      }
+    },
+    myiooutInfo () {
+      var _this = this
+      var param = {
+        ip: localStorage.getItem('zhongkongIP')
+      }
+      axios({
+        method: 'get',
+        url: 'api/get_io_list',
+        params: param
+      }).then(function (response) {
+        console.log('=======iooutInfo======get_io_list=======' + JSON.stringify(response.data))
+        _this.ioOutList = response.data.data.rows
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    ipconnectiooutInfo () {
       var _this = this
       var param = {}
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/iooutInfo',
         params: param
       }).then(function (response) {
-        console.log('=======iooutInfo=============' + JSON.stringify(response.data))
+        console.log('=======iooutInfo=====zhongkongIP========' + JSON.stringify(response.data))
         _this.ioOutList = response.data.data
       }).catch(function (error) {
         alert(error)

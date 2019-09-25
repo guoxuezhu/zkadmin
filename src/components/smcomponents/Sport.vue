@@ -58,7 +58,6 @@
 
 <script>
 import axios from 'axios'
-// import apply from '../../api/apply.js'
 import Qs from 'qs'
 export default {
   data () {
@@ -126,19 +125,24 @@ export default {
       })
     },
     getSportInfo (spnumer) {
+      if (localStorage.getItem('isMyIPconnect') === '1') {
+        this.ipconnectSportInfo(spnumer)
+      } else {
+        this.mySportInfo(spnumer)
+      }
+    },
+    ipconnectSportInfo (spnumer) {
       var _this = this
       _this.ckNum = spnumer
       var param = {
         sportNum: spnumer
       }
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/sportInfo',
         params: param
       }).then(function (response) {
-        console.log('=======串口=============' + JSON.stringify(response.data.data))
+        console.log('=======串口======zhongkongIP=======' + JSON.stringify(response.data.data))
         _this.baudrateSelected = response.data.data.serialPortData.baudRateId
         _this.checkoutBitSelected = response.data.data.serialPortData.checkoutBitId
         _this.dataBitSelected = response.data.data.serialPortData.dataBitId
@@ -146,6 +150,33 @@ export default {
         _this.bindName = response.data.data.serialPortData.deviceName
         _this.jinzhiSelected = response.data.data.serialPortData.jinZhi
         _this.commandList = response.data.data.serialCommandList
+        _this.count = _this.commandList.length
+        _this.commands = _this.commandList.slice(0, 10)
+        _this.currentPage = 1
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    mySportInfo (spnumer) {
+      var _this = this
+      _this.ckNum = spnumer
+      var param = {
+        port_no: _this.ckNum,
+        ip: localStorage.getItem('zhongkongIP')
+      }
+      axios({
+        method: 'get',
+        url: 'api/get_serial_list',
+        params: param
+      }).then(function (response) {
+        console.log('=======串口======get_serial_list=======' + JSON.stringify(response.data.data))
+        _this.baudrateSelected = response.data.data.rows[0].baudRateId
+        _this.checkoutBitSelected = response.data.data.rows[0].checkoutBitId
+        _this.dataBitSelected = response.data.data.rows[0].dataBitId
+        _this.stopBitSelected = response.data.data.rows[0].stopBitId
+        _this.bindName = response.data.data.rows[0].deviceName
+        _this.jinzhiSelected = response.data.data.rows[0].jinZhi
+        _this.commandList = response.data.data.rows[0].command
         _this.count = _this.commandList.length
         _this.commands = _this.commandList.slice(0, 10)
         _this.currentPage = 1
@@ -169,8 +200,6 @@ export default {
         jinZhi: _this.jinzhiSelected,
         sportMls: JSON.stringify(_this.commandList)
       }
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'post',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/updataSportInfo',

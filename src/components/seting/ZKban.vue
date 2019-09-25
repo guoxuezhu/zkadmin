@@ -29,8 +29,6 @@ export default {
     mqttInfo () {
       var _this = this
       var param = {}
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/mqttInfo',
@@ -46,8 +44,6 @@ export default {
       var param = {
         zkbtn: btnmsg
       }
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'post',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/zkczbtn',

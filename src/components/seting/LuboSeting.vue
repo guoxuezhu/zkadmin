@@ -46,12 +46,17 @@ export default {
   },
   methods: {
     luboInfo () {
+      if (localStorage.getItem('isMyIPconnect') === '1') {
+        this.ipconnectLuboInfo()
+      } else {
+        this.myLuboInfo()
+      }
+    },
+    myLuboInfo () {
       var _this = this
       var param = {
         ip: localStorage.getItem('zhongkongIP')
       }
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'api/get_record_list',
@@ -63,7 +68,7 @@ export default {
         alert(error)
       })
     },
-    myluboInfo () {
+    ipconnectLuboInfo () {
       var _this = this
       var param = {}
       axios({

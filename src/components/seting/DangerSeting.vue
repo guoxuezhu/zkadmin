@@ -52,16 +52,37 @@ export default {
   },
   methods: {
     getDangerInfo () {
+      if (localStorage.getItem('isMyIPconnect') === '1') {
+        this.ipconnectDangerInfo()
+      } else {
+        this.myDangerInfo()
+      }
+    },
+    myDangerInfo () {
+      var _this = this
+      var param = {
+        ip: localStorage.getItem('zhongkongIP')
+      }
+      axios({
+        method: 'get',
+        url: 'api/get_alarm_list',
+        params: param
+      }).then(function (response) {
+        console.log('=======报警======get_alarm_list=======' + JSON.stringify(response.data))
+        _this.dangerList = response.data.data.rows
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    ipconnectDangerInfo () {
       var _this = this
       var param = {}
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/dangerInfo',
         params: param
       }).then(function (response) {
-        console.log('=======报警=============' + JSON.stringify(response.data))
+        console.log('=======报警======zhongkongIP=======' + JSON.stringify(response.data))
         _this.dangerList = response.data.data
       }).catch(function (error) {
         alert(error)

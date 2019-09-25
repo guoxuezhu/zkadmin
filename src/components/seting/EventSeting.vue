@@ -50,16 +50,40 @@ export default {
       })
     },
     eventInfo () {
+      if (localStorage.getItem('isMyIPconnect') === '1') {
+        this.ipconnecteventInfo()
+      } else {
+        this.myeventInfo()
+      }
+    },
+    myeventInfo () {
+      var _this = this
+      var param = {
+        ip: localStorage.getItem('zhongkongIP')
+      }
+      axios({
+        method: 'get',
+        url: 'api/get_event_list',
+        params: param
+      }).then(function (response) {
+        console.log('=======事件=====get_event_list========' + JSON.stringify(response.data))
+        _this.eventList = response.data.data.rows
+        _this.count = _this.eventList.length
+        _this.events = _this.eventList.slice(0, 10)
+        _this.currentPage = 1
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    ipconnecteventInfo () {
       var _this = this
       var param = {}
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'get',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/eventList',
         params: param
       }).then(function (response) {
-        console.log('=======事件=============' + JSON.stringify(response.data))
+        console.log('=======事件======zhongkongIP=======' + JSON.stringify(response.data))
         _this.eventList = response.data.data
         _this.count = _this.eventList.length
         _this.events = _this.eventList.slice(0, 10)

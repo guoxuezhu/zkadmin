@@ -125,8 +125,6 @@ export default {
       var param = {
         zkbaseInfoData: _this.baseinfoList
       }
-      // var sign = apply.appSign(param) // 添加签名
-      // param.sign = sign
       axios({
         method: 'post',
         url: 'http://' + localStorage.getItem('zhongkongIP') + ':8099/api/updataZKbaseInfo',
