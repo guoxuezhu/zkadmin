@@ -29,10 +29,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="版本号" :label-width="formLabelWidth">
-          <el-input v-model="form.version_code" autocomplete="off" placeholder="请输入地址"></el-input>
+          <el-input type="number" v-model="form.version_code" autocomplete="off" placeholder="请输入版本号"></el-input>
         </el-form-item>
         <el-form-item label="版本名称" :label-width="formLabelWidth">
-          <el-input v-model="form.version_name" autocomplete="off" placeholder="请输入用户名"></el-input>
+          <el-input v-model="form.version_name" autocomplete="off" placeholder="请输入版本名称"></el-input>
         </el-form-item>
         <el-form-item label="文件地址" :label-width="formLabelWidth">
           <b-form-file v-model="form.file" placeholder="请选择文件" drop-placeholder="Drop file here..." ></b-form-file>

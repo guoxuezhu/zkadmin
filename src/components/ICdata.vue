@@ -39,7 +39,7 @@
           <el-input v-model="form.name" autocomplete="off" placeholder="请输入姓名"></el-input>
         </el-form-item>
         <el-form-item label="卡号" :label-width="formLabelWidth">
-          <el-input v-model="form.card_no" autocomplete="off" placeholder="请输入卡号"></el-input>
+          <el-input type="number" v-model="form.card_no" autocomplete="off" placeholder="请输入卡号"></el-input>
         </el-form-item>
         <el-form-item label="权限" :label-width="formLabelWidth">
           <el-select v-model="form.role" placeholder="请选择权限" style="width: 100%">
@@ -162,6 +162,9 @@ export default {
     },
     addICdataOK () {
       var _this = this
+      if (_this.form.card_no.length !== 10) {
+        alert('卡号不是十位数')
+      }
       var param = {}
       if (_this.itemId === '') {
         param = {

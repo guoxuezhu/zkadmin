@@ -8,7 +8,7 @@
       <el-button type="primary" icon="el-icon-search" @click="searchbtn()">搜索</el-button>
       <br/><br/>
       <el-table :data="usertableData" border style="width: 100%">
-        <el-table-column prop="name" label="地址" ></el-table-column>
+        <el-table-column prop="name" label="备注" ></el-table-column>
         <el-table-column prop="user_name" label="用户名"></el-table-column>
         <el-table-column prop="user_pass" label="密码"></el-table-column>
         <el-table-column label="权限">
@@ -36,8 +36,8 @@
     </div>
     <el-dialog title="用户信息" :visible.sync="addUserDialogVisible">
       <el-form :model="form">
-        <el-form-item label="地址" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" placeholder="请输入地址"></el-input>
+        <el-form-item label="备注" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off" placeholder="请输入备注"></el-input>
         </el-form-item>
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="form.user_name" autocomplete="off" placeholder="请输入用户名"></el-input>
