@@ -4,6 +4,8 @@
     <br/><br/>
     <div style="width: 90%; margin:0 auto">
       <el-button type="primary" class="btnright" @click="addICdata()">添加IC卡</el-button>
+      <el-input v-model="searchName" placeholder="请输入姓名" style="width: 200px" ></el-input>
+      <el-button type="primary" icon="el-icon-search" @click="searchbtn()">搜索</el-button>
       <br/><br/>
       <el-table :data="ictableData" border style="width: 100%">
         <el-table-column prop="name" label="姓名" ></el-table-column>
@@ -28,6 +30,8 @@
           </template>
         </el-table-column>
       </el-table>
+      <br/><br/>
+      <b-pagination v-model="currentPage" :total-rows="count" :per-page="perPage" align="center" @change="pageEvent()"></b-pagination>
     </div>
     <el-dialog title="IC卡信息" :visible.sync="addICDialogVisible">
       <el-form :model="form">
@@ -72,6 +76,7 @@ export default {
   },
   data () {
     return {
+      searchName: '',
       itemId: '',
       ictableData: [],
       addICDialogVisible: false,
@@ -81,13 +86,29 @@ export default {
         role: '1',
         status: 'on'
       },
+      perPage: 10,
+      currentPage: 1,
+      count: 1,
       formLabelWidth: '120px'
     }
   },
   methods: {
+    pageEvent () {
+      this.$nextTick(function () {
+        console.log('=======currentPage========' + this.currentPage)
+        this.getICdata()
+      })
+    },
+    searchbtn () {
+      this.getICdata()
+    },
     getICdata () {
       var _this = this
-      var param = {}
+      var param = {
+        name: _this.searchName,
+        rows: _this.perPage,
+        p: _this.currentPage
+      }
       axios({
         method: 'get',
         url: 'api/get_ic_card_list',
@@ -95,6 +116,7 @@ export default {
       }).then(function (response) {
         console.log('=======getICdata=============' + JSON.stringify(response.data))
         _this.ictableData = response.data.data.rows
+        _this.count = response.data.data.count
       }).catch(function (error) {
         alert(error)
       })

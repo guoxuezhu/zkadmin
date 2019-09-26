@@ -4,6 +4,9 @@
     <div style="width: 90%; margin:0 auto">
       <!-- <el-button type="primary" class="btnright" @click="deviceAddbtn()">添加设备</el-button> -->
       <br/><br/>
+      <el-input v-model="searchName" placeholder="请输入设备名称" style="width: 200px" ></el-input>
+      <el-button type="primary" icon="el-icon-search" @click="searchbtn()">搜索</el-button>
+      <br/><br/>
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="title" label="设备名称" ></el-table-column>
         <el-table-column prop="ip" label="IP地址" width="180"></el-table-column>
@@ -24,6 +27,8 @@
           </template>
         </el-table-column>
       </el-table>
+      <br/><br/>
+      <b-pagination v-model="currentPage" :total-rows="count" :per-page="perPage" align="center" @change="pageEvent()"></b-pagination>
     </div>
     <el-dialog title="添加设备信息" :visible.sync="adddialogVisible">
       <el-form :model="form">
@@ -71,6 +76,7 @@ export default {
   },
   data () {
     return {
+      searchName: '',
       tableData: [],
       adddialogVisible: false,
       form: {
@@ -81,6 +87,9 @@ export default {
         videonum: '0',
         mqttstatus: 'off'
       },
+      perPage: 10,
+      currentPage: 1,
+      count: 1,
       formLabelWidth: '120px'
     }
   },
@@ -136,12 +145,22 @@ export default {
         })
       })
     },
-    login () {
-      this.$router.push({path: '/mainView'})
+    searchbtn () {
+      this.getDevices()
+    },
+    pageEvent () {
+      this.$nextTick(function () {
+        console.log('=======currentPage========' + this.currentPage)
+        this.getDevices()
+      })
     },
     getDevices () {
       var _this = this
-      var param = {}
+      var param = {
+        title: _this.searchName,
+        rows: _this.perPage,
+        p: _this.currentPage
+      }
       axios({
         method: 'get',
         url: 'api/get_center_list',
@@ -149,6 +168,7 @@ export default {
       }).then(function (response) {
         console.log('=======getDevices=============' + JSON.stringify(response.data))
         _this.tableData = response.data.data.rows
+        _this.count = response.data.data.count
       }).catch(function (error) {
         alert(error)
       })

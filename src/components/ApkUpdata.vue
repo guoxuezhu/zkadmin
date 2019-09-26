@@ -4,28 +4,35 @@
     <div style="width: 90%; margin:0 auto">
       <br/><br/>
       <el-button type="primary" class="btnright" @click="apkupdatabtn()">上传安装包</el-button>
-      <el-button type="primary" class="btnright" @click="getApkUpdata()">更新</el-button>
+      <!-- <el-button type="primary" class="btnright" @click="getApkUpdata()">更新</el-button> -->
       <br/><br/>
       <el-table :data="apktableData" border style="width: 100%">
-        <el-table-column prop="title" label="名称" ></el-table-column>
+        <el-table-column prop="title" label="名称"></el-table-column>
         <el-table-column prop="version_code" label=" 版本号"></el-table-column>
         <el-table-column prop="version_name" label="版本名称"></el-table-column>
+        <el-table-column label="下载地址" width="550">
+          <template slot-scope="scope">
+            <b-link >{{scope.row.files}}</b-link>
+          </template>
+        </el-table-column>
       </el-table>
+      <br/><br/>
+      <b-pagination v-model="currentPage" :total-rows="count" :per-page="perPage" align="center" @change="pageEvent()"></b-pagination>
     </div>
     <el-dialog title="软件信息" :visible.sync="apkdialogVisible">
       <el-form :model="form">
-        <el-form-item label="版本号" :label-width="formLabelWidth">
-          <el-input v-model="form.version_code" autocomplete="off" placeholder="请输入地址"></el-input>
-        </el-form-item>
-        <el-form-item label="版本名称" :label-width="formLabelWidth">
-          <el-input v-model="form.version_name" autocomplete="off" placeholder="请输入用户名"></el-input>
-        </el-form-item>
         <el-form-item label="安装包名称" :label-width="formLabelWidth">
           <el-select v-model="form.name" placeholder="请选择安装包名称" style="width: 100%">
             <el-option label="主机" value="主机"></el-option>
             <el-option label="操作面板" value="操作面板"></el-option>
             <el-option label="设备操作" value="设备操作"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="版本号" :label-width="formLabelWidth">
+          <el-input v-model="form.version_code" autocomplete="off" placeholder="请输入地址"></el-input>
+        </el-form-item>
+        <el-form-item label="版本名称" :label-width="formLabelWidth">
+          <el-input v-model="form.version_name" autocomplete="off" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item label="文件地址" :label-width="formLabelWidth">
           <b-form-file v-model="form.file" placeholder="请选择文件" drop-placeholder="Drop file here..." ></b-form-file>
@@ -60,13 +67,24 @@ export default {
         version_name: '',
         file: ''
       },
-      fileList: []
+      perPage: 10,
+      currentPage: 1,
+      count: 1
     }
   },
   methods: {
+    pageEvent () {
+      this.$nextTick(function () {
+        console.log('=======currentPage========' + this.currentPage)
+        this.getApkList()
+      })
+    },
     getApkList () {
       var _this = this
-      var param = {}
+      var param = {
+        rows: _this.perPage,
+        p: _this.currentPage
+      }
       axios({
         method: 'get',
         url: 'api/get_soft_list',
@@ -74,12 +92,12 @@ export default {
       }).then(function (response) {
         console.log('=======getApkList=============' + JSON.stringify(response.data))
         _this.apktableData = response.data.data.rows
+        _this.count = response.data.data.count
       }).catch(function (error) {
         alert(error)
       })
     },
     getApkUpdata () {
-      // var _this = this
       var param = {
         title: '主机',
         version_code: 1,
@@ -115,15 +133,6 @@ export default {
     },
     apkupdatabtn () {
       this.apkdialogVisible = true
-    },
-    submitUpload () {
-      this.$refs.upload.submit()
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview (file) {
-      console.log(file)
     }
   }
 }
