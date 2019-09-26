@@ -164,6 +164,7 @@ export default {
       var _this = this
       if (_this.form.card_no.length !== 10) {
         alert('卡号不是十位数')
+        return
       }
       var param = {}
       if (_this.itemId === '') {
