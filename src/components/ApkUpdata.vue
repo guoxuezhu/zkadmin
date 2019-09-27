@@ -35,7 +35,7 @@
           <el-input v-model="form.version_name" autocomplete="off" placeholder="请输入版本名称"></el-input>
         </el-form-item>
         <el-form-item label="文件地址" :label-width="formLabelWidth">
-          <b-form-file v-model="form.file" placeholder="请选择文件" drop-placeholder="Drop file here..." ></b-form-file>
+          <b-form-file v-model="form.file" placeholder="请选择 .apk 文件" drop-placeholder="Drop file here..." ></b-form-file>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,6 +115,7 @@ export default {
     },
     addApkdataOK () {
       console.log('=======addApkdataOK=============' + this.form.file.name)
+      var _this = this
       let formData = new FormData()
       formData.append('title', this.form.name)
       formData.append('version_code', this.form.version_code)
@@ -127,11 +128,22 @@ export default {
         headers: { 'Content-Type': 'multipart/form-data' }
       }).then(function (response) {
         console.log('=======addApkdataOK====上传=========' + JSON.stringify(response.data))
+        if (response.data.msg === 'OK') {
+          _this.apkdialogVisible = false
+          // alert('添加成功')
+          _this.getApkList()
+        } else {
+          alert('上传失败' + response.data.msg)
+        }
       }).catch(function (error) {
         alert(error)
       })
     },
     apkupdatabtn () {
+      this.form.name = ''
+      this.form.version_code = 0
+      this.form.version_name = ''
+      this.form.file = ''
       this.apkdialogVisible = true
     }
   }

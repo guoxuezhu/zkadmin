@@ -3,6 +3,8 @@
     <Navbar></Navbar>
     <br/><br/>
     <div style="width: 90%; margin:0 auto">
+      <el-button type="primary" class="btnright" @click="importOutICdata()">导出</el-button>
+      <el-button type="primary" class="btnright" @click="importICdata()">导入</el-button>
       <el-button type="primary" class="btnright" @click="addICdata()">添加IC卡</el-button>
       <el-input v-model="searchName" placeholder="请输入姓名" style="width: 200px" ></el-input>
       <el-button type="primary" icon="el-icon-search" @click="searchbtn()">搜索</el-button>
@@ -33,6 +35,17 @@
       <br/><br/>
       <b-pagination v-model="currentPage" :total-rows="count" :per-page="perPage" align="center" @change="pageEvent()"></b-pagination>
     </div>
+    <el-dialog title="导入信息" :visible.sync="ICimportdialogVisible">
+      <el-form :model="formFile">
+        <el-form-item label="文件地址" :label-width="formLabelWidth">
+          <b-form-file v-model="formFile.file" placeholder="请选择 .xlsx 文件" drop-placeholder="Drop file here..." ></b-form-file>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="ICimportdialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="importICdataok()">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog title="IC卡信息" :visible.sync="addICDialogVisible">
       <el-form :model="form">
         <el-form-item label="姓名" :label-width="formLabelWidth">
@@ -79,12 +92,16 @@ export default {
       searchName: '',
       itemId: '',
       ictableData: [],
+      ICimportdialogVisible: false,
       addICDialogVisible: false,
       form: {
         name: '',
         card_no: '',
         role: '1',
         status: 'on'
+      },
+      formFile: {
+        file: ''
       },
       perPage: 10,
       currentPage: 1,
@@ -152,6 +169,43 @@ export default {
         alert(error)
       })
     },
+    importOutICdata () {
+      var param = {}
+      axios({
+        method: 'get',
+        url: '/api/export_ic_card',
+        params: param
+      }).then(function (response) {
+        console.log('=======importOutICdata=============' + JSON.stringify(response.data))
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
+    importICdata () {
+      this.formFile.file = ''
+      this.ICimportdialogVisible = true
+    },
+    importICdataok () {
+      var _this = this
+      let formData = new FormData()
+      formData.append('ic_files', this.formFile.file)
+      axios({
+        method: 'post',
+        url: 'api/import_ic_card',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(function (response) {
+        console.log('=======addApkdataOK====上传=========' + JSON.stringify(response.data))
+        if (response.data.flag === 1) {
+          _this.ICimportdialogVisible = false
+          _this.getICdata()
+        } else {
+          alert('上传失败' + response.data.msg)
+        }
+      }).catch(function (error) {
+        alert(error)
+      })
+    },
     addICdata () {
       this.itemId = ''
       this.form.name = ''
@@ -194,7 +248,6 @@ export default {
         console.log('=======addUserdataOK=============' + JSON.stringify(response.data))
         if (response.data.msg === 'OK') {
           _this.addICDialogVisible = false
-          // alert('添加成功')
           _this.getICdata()
         } else {
           alert('添加失败' + response.data.msg)
@@ -207,9 +260,9 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .btnright {
   float: right;
+  margin-left: 10px;
 }
 </style>
