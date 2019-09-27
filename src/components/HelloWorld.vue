@@ -22,7 +22,7 @@
         <el-table-column fixed="right" label="操作" width="250">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="deviceEdit(scope.$index, scope.row)" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="正在尝试连接设备中" element-loading-background="rgba(0, 0, 0, 0.2)">连接修改</el-button>
-            <el-button size="mini" type="danger" @click="deviceDelete(scope.$index, scope.row)">删除</el-button>
+            <!-- <el-button size="mini" type="danger" @click="deviceDelete(scope.$index, scope.row)">删除</el-button> -->
             <el-button size="mini" type="success" @click="deviceinfo(scope.$index, scope.row)">详情</el-button>
           </template>
         </el-table-column>
