@@ -170,16 +170,7 @@ export default {
       })
     },
     importOutICdata () {
-      var param = {}
-      axios({
-        method: 'get',
-        url: '/api/export_ic_card',
-        params: param
-      }).then(function (response) {
-        console.log('=======importOutICdata=============' + JSON.stringify(response.data))
-      }).catch(function (error) {
-        alert(error)
-      })
+      window.location.href = axios.defaults.baseURL + 'api/export_ic_card'
     },
     importICdata () {
       this.formFile.file = ''

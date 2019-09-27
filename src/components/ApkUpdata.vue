@@ -10,9 +10,10 @@
         <el-table-column prop="title" label="名称"></el-table-column>
         <el-table-column prop="version_code" label=" 版本号"></el-table-column>
         <el-table-column prop="version_name" label="版本名称"></el-table-column>
-        <el-table-column label="下载地址" width="550">
+        <el-table-column prop="files" label="下载地址" width="550"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="130">
           <template slot-scope="scope">
-            <b-link >{{scope.row.files}}</b-link>
+            <el-button size="mini" type="primary" @click="downloadApk(scope.$index, scope.row)">下载</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,6 +97,9 @@ export default {
       }).catch(function (error) {
         alert(error)
       })
+    },
+    downloadApk (index, row) {
+      window.location.href = row.files
     },
     getApkUpdata () {
       var param = {
