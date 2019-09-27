@@ -21,7 +21,7 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="250">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="deviceEdit(scope.$index, scope.row)">连接修改</el-button>
+            <el-button size="mini" type="primary" @click="deviceEdit(scope.$index, scope.row)" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="正在尝试连接设备中" element-loading-background="rgba(0, 0, 0, 0.2)">连接修改</el-button>
             <el-button size="mini" type="danger" @click="deviceDelete(scope.$index, scope.row)">删除</el-button>
             <el-button size="mini" type="success" @click="deviceinfo(scope.$index, scope.row)">详情</el-button>
           </template>
@@ -76,6 +76,7 @@ export default {
   },
   data () {
     return {
+      fullscreenLoading: false,
       searchName: '',
       tableData: [],
       adddialogVisible: false,
@@ -111,6 +112,7 @@ export default {
     },
     deviceEdit (index, row) {
       var _this = this
+      _this.fullscreenLoading = true
       var param = {}
       axios({
         method: 'get',
@@ -123,8 +125,10 @@ export default {
           localStorage.setItem('zhongkongIP', row.ip)
           _this.$router.push({path: '/mainView'})
         }
+        _this.fullscreenLoading = false
       }).catch(function (error) {
         alert(error + '连接失败，请检查网络')
+        _this.fullscreenLoading = false
       })
     },
     deviceDelete (index, row) {
