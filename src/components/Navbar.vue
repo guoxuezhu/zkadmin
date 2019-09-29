@@ -38,6 +38,7 @@ export default {
       // localStorage.setItem('isLogin', '0')
       localStorage.setItem('passWord', '')
       localStorage.setItem('mimastatus', '')
+      localStorage.setItem('quanxian', '')
       this.$router.push({path: '/login'})
     }
   }

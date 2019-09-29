@@ -6,7 +6,8 @@ import router from './router'
 // axios 配置
 axios.defaults.timeout = 60000
 
-axios.defaults.baseURL = 'http://192.168.0.100/'
+axios.defaults.baseURL = 'http://lihong.h09.66571.com'
+// axios.defaults.baseURL = 'http://192.168.0.100/'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 // http request 拦截器
