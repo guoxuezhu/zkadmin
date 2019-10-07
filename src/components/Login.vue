@@ -84,7 +84,7 @@ export default {
           localStorage.setItem('passWord', _this.passWord)
           localStorage.setItem('mimastatus', _this.status)
           localStorage.setItem('quanxian', response.data.data.role)
-          _this.$router.push({path: '/helloWorld'})
+          _this.$router.push({path: '/connect'})
         } else {
           localStorage.setItem('userName', '')
           localStorage.setItem('passWord', '')

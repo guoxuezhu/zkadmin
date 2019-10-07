@@ -7,6 +7,7 @@ import Classdata from '@/components/Classdata'
 import Userlist from '@/components/Userlist'
 import ICdata from '@/components/ICdata'
 import ApkUpdata from '@/components/ApkUpdata'
+import Connect from '@/components/Connect.vue'
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    }, {
+      path: '/connect',
+      name: 'Connect',
+      component: Connect
     }, {
       path: '/apkUpdata',
       name: 'ApkUpdata',
